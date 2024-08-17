@@ -1,0 +1,4 @@
+description,source,destination,amount,expected_result
+"Sample transaction","Cash wallet","Cash account","100","success"
+"","Cash wallet","Cash account","100","failure"
+"Invalid transaction","Invalid Source","Cash account","100","failure"
