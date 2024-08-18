@@ -1,4 +1,4 @@
-description,source,destination,amount,expected_result
-"Sample transaction","Cash wallet","Cash account","100","success"
-"","Cash wallet","Cash account","100","failure"
-"Invalid transaction","Invalid Source","Cash account","100","failure"
+description,source,destination,date,amount,expected_result
+"Sample transaction","Cash wallet","Cash account","13/08/2024","100","failure"
+"","Cash wallet","Cash account","13/08/2024","100","success"
+"Invalid transaction","Invalid Source","Cash account","13/08/2024","100","success"

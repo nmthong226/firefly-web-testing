@@ -7,6 +7,14 @@ from pytest_bdd import scenario, given, when, then
 from pytest import fixture
 import time
 import csv
+from dotenv import load_dotenv
+import os
+
+#Load ENV
+load_dotenv()
+APP_LINK = os.getenv('APP_LINK')
+ACCOUNT_EMAIL = os.getenv('ACCOUNT_EMAIL')
+ACCOUNT_PASSWORD = os.getenv('ACCOUNT_PASSWORD')
 
 # Function to load CSV data
 def load_transaction_data(csv_file):
@@ -25,7 +33,11 @@ def driver():
     driver.quit()
 
 def login_firefly(driver):
-    driver.get('https://demo.firefly-iii.org/login')
+    driver.get(APP_LINK)
+    driver.ele('@name=email').input(ACCOUNT_EMAIL)
+    driver.wait(2)
+    driver.ele('@name=password').input(ACCOUNT_PASSWORD)
+    driver.wait(2)
     remember_checkbox = driver.ele('#remember')
     if remember_checkbox:
         remember_checkbox.check()
@@ -38,22 +50,36 @@ def login_firefly(driver):
 
 # Create new transaction
 def create_new_transaction(driver, transaction_data):
+    # Input the description
     driver.ele('@name=description[]').input(transaction_data['description'])
     driver.wait(2)
+
+    # Input the source account
     driver.ele('@name=source[]').input(transaction_data['source'])
     driver.wait(2)
     suggest_source = driver.ele(transaction_data['source'])
     if suggest_source:
         suggest_source.click()
         driver.wait(2)
+
+    # Input the destination account
     driver.ele('@name=destination[]').input(transaction_data['destination'])
     driver.wait(2)
-    # suggest_destination = driver.ele(transaction_data['destination'])
-    # if suggest_destination:
-    #     suggest_destination.click()
-    #     driver.wait(2)
+    
+    # Input the date (day, month, year)
+    day, month, year = transaction_data['date'].split('/')
+    driver.ele('@name=date[]').input(day)
+    driver.wait(1)
+    driver.ele('@name=date[]').input(month)
+    driver.wait(1)
+    driver.ele('@name=date[]').input(year)
+    driver.wait(2)
+    
+    # Input the amount
     driver.ele('@name=amount[]').input(transaction_data['amount'])
     driver.wait(2)
+
+    # Submit the form
     driver.ele('#submitButton').click()
     driver.wait(2)
 
